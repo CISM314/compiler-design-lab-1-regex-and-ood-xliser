@@ -1,0 +1,114 @@
+package bankaccount;
+import java.util.*;
+
+public class BankAccount {
+    
+    public BankAccount()
+    {
+      balance=0;
+    }
+ public BankAccount(double initialBalance)
+ {
+    balance=initialBalance;
+ }
+    public void deposit(double amount)
+    {
+      balance = balance+amount;
+    
+    }
+    public void withdraw(double amount)
+    {
+       balance=balance-amount;
+    }
+    public double getBalance()
+    {
+      return balance;
+    }
+    public void transfer(double amount, BankAccount other)
+    {
+      withdraw(amount);
+      other.deposit(amount);
+    
+    }
+    private double balance;
+
+    public static void main(String[] args)
+{
+    
+SavingsAccount newSavings =new SavingsAccount(0.5);
+CheckingAccount newChecking =new CheckingAccount(100);
+Scanner consoleScanner = new Scanner(System.in);
+System.out.println("NAME OF ACCOUNT : XLISER ");
+System.out.println("Enter the amount deposited");
+double deposit=consoleScanner.nextDouble();
+newSavings.transfer(2000, newChecking);
+System.out.println("enter the amount to withdraw");
+int withdraw=consoleScanner.nextInt();
+newChecking.withdraw(80);
+newSavings.transfer(1000, newChecking);
+newChecking.withdraw(400); 
+newSavings.addInterest();
+newChecking.deductFees();
+System.out.println("savings balance = R" +newSavings.getBalance());
+
+System.out.println("checking balance = R" +newChecking.getBalance());
+
+}
+}
+
+
+
+package bankaccount;
+
+public class CheckingAccount extends BankAccount
+{
+private int transactionCount;
+    public static final int FREE_TRANSACTIONS=5;
+    private static final double TRANSACTION_FEE=1.0;
+    public CheckingAccount(double initialBalance)
+    {
+    super(initialBalance);
+    transactionCount=0;
+    
+    }
+    public void deposite(double amount)
+    {
+       transactionCount++;
+       super.deposit(amount);
+    }
+    public void withdraw(double amount)
+    {
+      transactionCount++;
+      super.withdraw(amount);
+    }
+    public void deductFees()
+    {
+      if(transactionCount>FREE_TRANSACTIONS)
+      {
+        double fees = TRANSACTION_FEE*(transactionCount-FREE_TRANSACTIONS);
+        super.withdraw(fees);
+      
+      }
+      transactionCount=0;
+    }
+   
+    
+    
+
+}
+
+package bankaccount;
+
+public class SavingsAccount  extends BankAccount{
+    
+    public SavingsAccount(double rate)
+    {
+       interestRate=rate;
+    }
+    public void addInterest()
+    {
+    double interest=getBalance()*interestRate/100;
+    deposit(interest);
+    }
+    private double interestRate;
+}
